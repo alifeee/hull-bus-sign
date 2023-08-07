@@ -14,7 +14,9 @@ Either connect to:
 
 ### unit as a whole
 
-(i.e., with Ethernet cable, and hacking Ethernet commands)
+i.e., with Ethernet cable, and hacking Ethernet commands
+
+I imagine I'd need to [Wireshark](https://www.wireshark.org/) the Ethernet signals, and try and pretend to be the server. This might be difficult.
 
 ### led controller(s)
 
@@ -37,4 +39,4 @@ This is what is done by [ConnectedHumber]. Pins are defined ([source][ConnectedH
 [ConnectedHumber:ribbon]: https://github.com/ConnectedHumber/Bus-Terminal-Signs/blob/master/Hardware.md#ribbon-cable
 [ConnectedHumber:pins]: https://github.com/ConnectedHumber/Bus-Terminal-Signs/blob/924d6c9f16a497d58154f33e4dc9a63ff28e7344/Code/Examples/Scrolling%20Text%20Demo.ino#L10-L13
 
-...and the signal on these pins is bit-bashed (pretending to be SPI)
+...and the signal on these pins is bit-bashed (pretending to be SPI). For code information (i.e., logic on what happens when you send "change a pixel"), see [code information](./code%20information.md#Information)

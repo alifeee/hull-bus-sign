@@ -1,0 +1,1 @@
+{"rule":"WANT_TO_NN","sentence":"^\\QI imagine I'd need to Wireshark the ethernet signals, and try and pretend to be the server.\\E$"}
