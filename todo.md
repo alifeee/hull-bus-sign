@@ -40,3 +40,17 @@ This is what is done by [ConnectedHumber]. Pins are defined ([source][ConnectedH
 [ConnectedHumber:pins]: https://github.com/ConnectedHumber/Bus-Terminal-Signs/blob/924d6c9f16a497d58154f33e4dc9a63ff28e7344/Code/Examples/Scrolling%20Text%20Demo.ino#L10-L13
 
 ...and the signal on these pins is bit-bashed (pretending to be SPI). For code information (i.e., logic on what happens when you send "change a pixel"), see [code information](./code%20information.md#Information)
+
+#### to-do
+
+Find out which wires on the aforementioned ribbon cable correspond to which entry above...
+
+![Close-up of ribbon cable](images/ribbon-cable_closeup.png)
+
+...and then trace them through the PCB...
+
+![Close-up of where ribbon cable attaches to proprietary PCB](images/pcb_ribbon-cable-connector.png)
+
+...and solder on some jumper cables, which I can put into a breadboard.
+
+Then, attach the breadboard to the Pi, and can use the pinouts to (hopefully) use the lights!
