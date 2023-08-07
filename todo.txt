@@ -1,7 +1,0 @@
-either connect to:
-
-unit as a whole
-(i.e., with ethernet cable, and hacking ethernet commands)
-
-led controller(s)
-(i.e., with attaching ribbon cable to some pins on microcontroller, or raspberry pi)
