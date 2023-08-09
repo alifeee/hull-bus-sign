@@ -16,7 +16,7 @@ How to set up the screen.
 
 ### Ribbon cable (4)
 
-Also see [unit information](./unit%20information.md#pins)
+Also see [unit information#pins](./unit%20information.md#pins)
 
 ![Zoom of ribbon connector, showing soldered cables 2, 3, 5, 7, and 8.](images/setup_ribbon-connector.png)
 
