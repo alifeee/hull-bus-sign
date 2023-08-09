@@ -8,6 +8,8 @@ Code taken from <https://github.com/ConnectedHumber/Bus-Terminal-Signs/>
 
 demo of scrolling text
 
+For the default code, ConnectedHumber used 2 PCBs, amounting to a 6x2 array of panels, or 12 "chips" (2 chips per panel).
+
 <https://github.com/ConnectedHumber/Bus-Terminal-Signs/blob/master/Code/Examples/Scrolling%20Text%20Demo.ino>
 
 ### `CH_AS1100.h`
