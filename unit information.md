@@ -42,6 +42,12 @@ This is what is done by [ConnectedHumber]. Pins are defined ([source][ConnectedH
 
 ...and the signal on these pins is bit-bashed (pretending to be SPI). For code information (i.e., logic on what happens when you send "change a pixel"), see [code information](./code%20information.md#Information)
 
+### AS1100
+
+The AS1100 board is used to control the matrix displays (8x8 or maybe 6x8 grids), as per this image (from [AS1100 datasheet](https://github.com/ConnectedHumber/Bus-Terminal-Signs/blob/master/Datasheets/AS1100_DS000273_1-00.pdf))
+
+![Section 9.3 of the datasheet, showing two AS1100 chips chained to two dot matrices.](images/AS1100-datasheet_dot-matrix.png)
+
 ### Pins
 
 On the multiple line DMX board, the pins going to the LED panels are as such:

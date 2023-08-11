@@ -2,3 +2,4 @@ ConnectedHumber
 GPIO
 clk
 ISET
+datasheet
