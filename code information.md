@@ -177,9 +177,23 @@ Here the oscilloscope is connected to pin 9 (clock) on channel 1, and pin 5 (dat
 
 #### Sending 0x0E02, clock and data
 
-Here you can see the clock signal (1, yellow), and the data signal (2, blue). There are 32 peaks, presumably 16 groups of 2 (1 fat peak and 1 thin peak, repeating).
+Here you can see the clock signal (1, yellow), and the data signal (2, blue). The signal is sent 16 times repeatedly, as per the code above (`sendCmd`).
 
 ![Oscilloscope trace of clock, yellow (rapidly oscillating), and data, blue (32 discrete jumps).](./oscilloscope/send-0x0e00_1-clock_2-data_0/TEK.BMP)
+
+Let's zoom on one single message (plotted with [`plot_single_message.py`](./oscilloscope/plot_single_message.py)), remembering that the bytes being sent are:
+
+```binary
+0000 1110 0000 0010
+```
+
+![Python plot of 1/16th of the above image, showing a single message. Data signal shows the same bits as 0000 1110 0000 0010 for the corresponding clock signal troughs](./oscilloscope/single_message.png)
+
+Neat! That looks good. It also looks like we are on the limit of this timestep's resolution. We could look again by increasing the oscilloscope timestep, but it wouldn't catch the whole signal (above). This wouldn't be an issue as we only want one signal (16 bits).
+
+Also, it seems that the peak signal is around 3.3 V. This may be a problem, [as mentioned by ConnectedHumber][arduino driving].
+
+[arduino driving]: https://github.com/ConnectedHumber/Bus-Terminal-Signs/blob/master/Hardware.md#using-an-arduino-to-drive-the-panels
 
 #### Sending 0x0E02, clock and load
 
@@ -189,8 +203,6 @@ As described above, the load signal goes high (by going low, then high), trigger
 
 Zoom:
 
-![Zoom of the above image, showing load signal going low for a small-time.](./oscilloscope/send-0x0e00_1-clock_2-load_1/TEK.BMP)
+![Zoom of the above image, showing the load signal going low for a short time.](./oscilloscope/send-0x0e00_1-clock_2-load_1/TEK.BMP)
 
-#### NEXT
-
-Now, I would like to have a look to see if I can see the difference between a `0` pulse and a `1` pulse.
+It may make more sense for the load pin to be low all the time, and go high when it needs sending. This may be more reliable.
