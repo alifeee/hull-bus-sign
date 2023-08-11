@@ -54,7 +54,7 @@ The [current code uses "bit banging"][bit banging] to attempt to communicate wit
 
 For this experiment, I use the following Arduino script to repeatedly send a basic command to the AS1100 to reset the clock.
 
-```arduino
+```c
 #define DATA_PIN 5
 #define CLK_PIN 9
 #define LOAD_PIN 10
