@@ -3,3 +3,4 @@ GPIO
 clk
 ISET
 datasheet
+setClockMode

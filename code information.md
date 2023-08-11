@@ -43,3 +43,119 @@ C++ code which inherits from class (to implement working behaviour):
 [`setPixel`]: https://github.com/ConnectedHumber/Bus-Terminal-Signs/blob/924d6c9f16a497d58154f33e4dc9a63ff28e7344/Code/CH_AS1100.cpp#L390-L404
 [internal pixel array]: https://github.com/ConnectedHumber/Bus-Terminal-Signs/blob/924d6c9f16a497d58154f33e4dc9a63ff28e7344/Code/CH_AS1100.h#L67
 [`Panel.display`]: https://github.com/ConnectedHumber/Bus-Terminal-Signs/blob/924d6c9f16a497d58154f33e4dc9a63ff28e7344/Code/Examples/Scrolling%20Text%20Demo.ino#L71
+
+## SPI and Sending Data
+
+To communicate with the AS1100, SPI can be used. The communication method is described in the [AS1100 datasheet].
+
+The [current code uses "bit banging"][bit banging] to attempt to communicate with the AS1100 boards. Partly to understand SPI, and partly to diagnose issues, I have scoped into the clock, data, and load pins to see exactly what signals are sent when data is sent.
+
+### Setup
+
+For this experiment, I use the following Arduino script to repeatedly send a basic command to the AS1100 to reset the clock.
+
+```arduino
+#define DATA_PIN 5
+#define CLK_PIN 9
+#define LOAD_PIN 10
+
+#define NUM_CHIPS 16
+
+Panel panel=Panel(DATA_PIN,CLK_PIN,LOAD_PIN,NUM_CHIPS);
+
+void setup() {
+
+}
+
+void loop()
+{
+  panel.setClockMode(2);
+  delay(100);
+}
+```
+
+As per the [definition of setClockMode][setClockMode], this sends `0x0E02`, or
+
+```binary
+0000 1110 0000 0010
+```
+
+As per the [AS1100 datasheet], it accepts 16 bits as such...
+
+![Screenshot of table 4 from AS1100 datasheet](images/AS1100-datasheet_serial-data-format.png)
+
+...and specifically for the clock modes, it accepts `0x0E00`, `0x0E01`, `0x0E02`, `0x0E03`:
+
+![Screenshot of section 8.10 and table 14 from AS1100 datasheet](images/AS1100-datasheet_reset-and-internal-clock-register.png)
+
+[setClockMode]: https://github.com/ConnectedHumber/Bus-Terminal-Signs/blob/e6338adccdb4e44680c86468fa18fadd92395694/Code/CH_AS1100.cpp#L486-L495
+[bit banging]: https://github.com/ConnectedHumber/Bus-Terminal-Signs/blob/master/Code/README.md
+[AS1100 datasheet]: https://github.com/ConnectedHumber/Bus-Terminal-Signs/blob/master/Datasheets/AS1100_DS000273_1-00.pdf
+
+### How the code sends data
+
+The code sends the signal (`0000 1110 0000 0010`) by sending `write16(0x0e02)` followed by `load()` ([source][sendCmd]). `write16` works like this([source][write16])
+
+```c++
+void Panel::write16(int d)
+{
+  // first 4 bits are don't care so we send zeros
+  // caller must call load() if this is the last write16
+  int mask = 0x0800;
+  digitalWrite(_dataPin, LOW); // send leading 0b0000
+  delayMicroseconds(1);
+  clk();
+  clk();
+  clk();
+  clk();
+  // then the lower 12 bits of the word
+  for (int i = 0; i < 12; i++)
+  {
+    digitalWrite(_dataPin, (d & mask) > 0 ? HIGH : LOW);
+    delayMicroseconds(NEXT_PULSE_DELAY); // allow data to settle
+    clk();
+    mask >>= 1;
+  }
+  digitalWrite(_dataPin, LOW); // end WITH 0 - EASIER TO DEBUG
+}
+```
+
+This is based on the specification in the [AS1100 datasheet]:
+
+![Screenshot of section 8.1 from AS1100 datasheet](images/AS1100-datasheet_serial-addressing-modes.png)
+
+Notably:
+
+- "The data is shifted into the
+internal 16 Bit register with the **rising edge of the CLK signal**"
+- "With the **rising edge of the LOAD signal** the data is latched into a digital or control
+register depending on the address. "
+
+[sendCmd]: https://github.com/ConnectedHumber/Bus-Terminal-Signs/blob/e6338adccdb4e44680c86468fa18fadd92395694/Code/CH_AS1100.cpp#L477-L484
+[write16]: https://github.com/ConnectedHumber/Bus-Terminal-Signs/blob/e6338adccdb4e44680c86468fa18fadd92395694/Code/CH_AS1100.cpp#L216-L236
+
+### Oscilloscope
+
+Here the oscilloscope is connected to pin 9 (clock) on channel 1, and pin 5 (data) on channel 2.
+
+![Picture of oscilloscope probes attached to Arduino pins, as described.](images/oscilloscope_attached_to_arduino.png)
+
+#### Sending 0x0E02, clock and data
+
+Here you can see the clock signal (1, yellow), and the data signal (2, blue). There are 32 peaks, presumably 16 groups of 2 (1 fat peak and 1 thin peak, repeating).
+
+![Oscilloscope trace of clock, yellow (rapidly oscillating), and data, blue (32 discrete jumps).](./oscilloscope/send-0x0e00_1-clock_2-data_0/TEK.BMP)
+
+#### Sending 0x0E02, clock and load
+
+As described above, the load signal goes high (by going low, then high), triggering the previous 16 bits to be read.
+
+![Oscilloscope trace of clock, yellow (rapidly oscillating), and data, blue (high until delta-function low at end of signal).](./oscilloscope/send-0x0e00_1-clock_2-load_0/TEK.BMP)
+
+Zoom:
+
+![Zoom of the above image, showing load signal going low for a small-time.](./oscilloscope/send-0x0e00_1-clock_2-load_1/TEK.BMP)
+
+#### NEXT
+
+Now, I would like to have a look to see if I can see the difference between a `0` pulse and a `1` pulse.
