@@ -94,7 +94,31 @@ As per the [AS1100 datasheet], it accepts 16 bits as such...
 
 ### How the code sends data
 
-The code sends the signal (`0000 1110 0000 0010`) by sending `write16(0x0e02)` followed by `load()` ([source][sendCmd]). `write16` works like this([source][write16])
+The code sends the signal (`0000 1110 0000 0010`) by sending `write16(0x0e02)` followed by `load()` ([source][sendCmd])
+
+```c++
+void Panel::setClockMode(int m)
+{
+  sendCmd(0x0E00 + (m & 3));
+}
+```
+
+In my case, this for loop repeats 16 times as I told it I have 16 chips.
+
+```c++
+void Panel::sendCmd(int data)
+{
+  // workhorse for many register updates below
+  // only used when all registers need to contain the same value
+  for (int chip = 0; chip < _numChips; chip++)
+    write16(data);
+  load();
+}
+```
+
+[write16 source][write16]
+
+`NEXT_PULSE_DELAY` is 1 ms.
 
 ```c++
 void Panel::write16(int d)
@@ -117,6 +141,17 @@ void Panel::write16(int d)
     mask >>= 1;
   }
   digitalWrite(_dataPin, LOW); // end WITH 0 - EASIER TO DEBUG
+}
+```
+
+```c++
+void Panel::load()
+{
+  // load pulse causes data to be loaded and displayed if display is on
+  digitalWrite(_loadPin, LOW); // transfer from shift register to display drivers buffer
+  delayMicroseconds(LOAD_PULSE_WIDTH);
+  digitalWrite(_loadPin, HIGH);
+  delayMicroseconds(NEXT_PULSE_DELAY);
 }
 ```
 
