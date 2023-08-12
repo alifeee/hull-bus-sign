@@ -1,1 +1,3 @@
 {"rule":"WANT_TO_NN","sentence":"^\\QI imagine I'd need to Wireshark the ethernet signals, and try and pretend to be the server.\\E$"}
+
+{"rule":"A_BIT","sentence":"^\\QBit significance \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q The AS1100 expects the MSB to be first (section 8.1, table 4)\\E$"}
