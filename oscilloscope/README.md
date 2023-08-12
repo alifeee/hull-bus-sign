@@ -34,3 +34,9 @@ See [SPI page](../SPI/README.md).
 
 [code information]: ../code%20information.md#sending-0x0e02-clock-and-data
 [ConnectedHumber]: https://github.com/connectedHumber/bus-Terminal-Signs/
+
+## SPI-0x0f01_1-clock_2-load_0
+
+SPI signal sending `0x0f01`. Clock signal shown in yellow. Load signal shown in blue.
+
+![Screenshot of oscilloscope, showing clock signal and load signal going low to signify end of transmission.](./SPI-0x0f01_1-clock_2-load_0/TEK.BMP)
