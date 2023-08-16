@@ -1,6 +1,8 @@
 # Hull Bus Sign
 
-The one in which I try to interface with the dot matrix Hull Bus signs, using work from:
+The one in which I try to interface with the dot matrix Hull Bus signs.
+
+⚠⚠⚠ This repository is now unused. For work on the Hull Bus Signs, see the main repository: ⚠⚠⚠
 
 <https://github.com/ConnectedHumber/Bus-Terminal-Signs>
 
