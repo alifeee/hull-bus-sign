@@ -8,3 +8,5 @@
 - attempt to turn on a single pixel
 - rewire plug for power?
 - attempt to write word
+- symlink libraries
+  - <https://forum.arduino.cc/t/symbolic-links-on-windows-arduino-libraries-as-link/323552>
